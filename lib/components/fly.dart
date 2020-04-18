@@ -1,22 +1,41 @@
 import 'dart:ui';
 
+import 'package:flame/sprite.dart';
 import 'package:flutterappfly/game_loop.dart';
 
 class Fly {
   Rect flyRect;
-  Paint flyPaint;
   final GameLoop gameLoop;
   bool isDead = false;
   bool isOffScreen = false;
 
-  Fly(this.gameLoop, double x, double y) {
-    flyRect = Rect.fromLTWH(x, y, gameLoop.tileSize, gameLoop.tileSize);
-    flyPaint = Paint();
-    flyPaint.color = Color(0xff6ab04c);
+  List<Sprite> flyingSprite;
+  Sprite deadSprite;
+  double flyingSpriteIndex = 0;
+
+  double get speed => gameLoop.tileSize * 3;
+
+  Offset targetLocation;
+
+  Fly(this.gameLoop) {
+    setTargetLocation();
+  }
+
+  void setTargetLocation() {
+    double x = gameLoop.rnd.nextDouble() *
+        (gameLoop.screenSize.width - (gameLoop.tileSize * 2.0));
+    double y = gameLoop.rnd.nextDouble() *
+        (gameLoop.screenSize.height - (gameLoop.tileSize * 2.0));
+    targetLocation = Offset(x, y);
   }
 
   void render(Canvas canvas) {
-    canvas.drawRect(flyRect, flyPaint);
+    if (isDead) {
+      deadSprite.renderRect(canvas, flyRect.inflate(2));
+    } else {
+      flyingSprite[flyingSpriteIndex.toInt()]
+          .renderRect(canvas, flyRect.inflate(2));
+    }
   }
 
   void update(double time) {
@@ -26,11 +45,27 @@ class Fly {
       if (flyRect.top > gameLoop.screenSize.height) {
         isOffScreen = true;
       }
+    } else {
+      flyingSpriteIndex += 30 * time;
+      if (flyingSpriteIndex >= flyingSprite.length) {
+        flyingSpriteIndex -= flyingSpriteIndex.toInt();
+      }
+
+      double stepDistance = speed * time;
+      Offset toTarget = targetLocation - Offset(flyRect.left, flyRect.top);
+      if (stepDistance < toTarget.distance) {
+        Offset stepToTarget =
+            Offset.fromDirection(toTarget.direction, stepDistance);
+        flyRect = flyRect.shift(stepToTarget);
+      } else {
+        flyRect = flyRect.shift(toTarget);
+        setTargetLocation();
+      }
     }
   }
 
-  void onTapDown() async {
+  void onTapDown() {
     isDead = true;
-    flyPaint.color = Color(0xffff4757);
+    gameLoop.spawnFly();
   }
 }
