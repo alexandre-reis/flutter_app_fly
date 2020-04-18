@@ -29,6 +29,7 @@ class GameLoop extends Game {
   void spawnFly() {
     double x = rnd.nextDouble() * (screenSize.width - tileSize);
     double y = rnd.nextDouble() * (screenSize.height - tileSize);
+    //
     flies.add(Fly(this, x, y));
   }
 
