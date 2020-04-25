@@ -10,6 +10,7 @@ import 'package:flutterappfly/components/credits-button.dart';
 import 'package:flutterappfly/components/drooler-fly.dart';
 import 'package:flutterappfly/components/fly.dart';
 import 'package:flutterappfly/components/help-button.dart';
+import 'package:flutterappfly/components/highscore-display.dart';
 import 'package:flutterappfly/components/house-fly.dart';
 import 'package:flutterappfly/components/hungry-fly.dart';
 import 'package:flutterappfly/components/macho-fly.dart';
@@ -21,6 +22,7 @@ import 'package:flutterappfly/view/help-view.dart';
 import 'package:flutterappfly/view/home-view.dart';
 import 'package:flutterappfly/view/lost-view.dart';
 import 'package:flutterappfly/view/view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GameLoop extends Game {
   View activeView = View.home;
@@ -46,7 +48,11 @@ class GameLoop extends Game {
 
   int score;
 
-  GameLoop() {
+  HighscoreDisplay highscoreDisplay;
+
+  final SharedPreferences storage;
+
+  GameLoop(this.storage) {
     initialize();
   }
 
@@ -69,6 +75,7 @@ class GameLoop extends Game {
     creditsButton = CreditsButton(this);
 
     scoreDisplay = ScoreDisplay(this);
+    highscoreDisplay = HighscoreDisplay(this);
 
     score = 0;
   }
@@ -105,6 +112,8 @@ class GameLoop extends Game {
       fly.render(canvas);
     });
 
+
+
     if (activeView == View.home) homeView.render(canvas);
     if (activeView == View.lost) lostView.render(canvas);
     if (activeView == View.home || activeView == View.lost) {
@@ -114,6 +123,8 @@ class GameLoop extends Game {
     }
     if (activeView == View.help) helpView.render(canvas);
     if (activeView == View.credits) creditsView.render(canvas);
+
+    highscoreDisplay.render(canvas);
   }
 
   void update(double t) {

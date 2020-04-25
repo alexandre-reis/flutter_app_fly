@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterappfly/game_loop.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main()  async {
 
@@ -42,9 +43,31 @@ void main()  async {
     'ui/icon-music-enabled.png',
     'ui/icon-sound-disabled.png',
     'ui/icon-sound-enabled.png',
+    'ui/callout.png',
   ]);
 
-  GameLoop gameLoop = GameLoop();
+  Flame.audio.disableLog();
+  Flame.audio.loadAll(<String>[
+    'sfx/haha1.ogg',
+    'sfx/haha2.ogg',
+    'sfx/haha3.ogg',
+    'sfx/haha4.ogg',
+    'sfx/haha5.ogg',
+    'sfx/ouch1.ogg',
+    'sfx/ouch2.ogg',
+    'sfx/ouch3.ogg',
+    'sfx/ouch4.ogg',
+    'sfx/ouch5.ogg',
+    'sfx/ouch6.ogg',
+    'sfx/ouch7.ogg',
+    'sfx/ouch8.ogg',
+    'sfx/ouch9.ogg',
+    'sfx/ouch10.ogg',
+    'sfx/ouch11.ogg',
+  ]);
+
+  SharedPreferences storage = await SharedPreferences.getInstance();
+  GameLoop gameLoop = GameLoop(storage);
   runApp(gameLoop.widget);
 
   TapGestureRecognizer tapper = TapGestureRecognizer();

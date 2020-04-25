@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/sprite.dart';
+import 'package:flutterappfly/components/callout.dart';
 import 'package:flutterappfly/game_loop.dart';
 import 'package:flutterappfly/view/view.dart';
 
@@ -18,8 +19,12 @@ class Fly {
 
   Offset targetLocation;
 
+  Callout callout;
+
   Fly(this.gameLoop) {
     setTargetLocation();
+
+    callout = Callout(this);
   }
 
   void setTargetLocation() {
@@ -36,6 +41,10 @@ class Fly {
     } else {
       flyingSprite[flyingSpriteIndex.toInt()]
           .renderRect(canvas, flyRect.inflate(2));
+
+      if (gameLoop.activeView == View.playing) {
+        callout.render(canvas);
+      }
     }
   }
 
@@ -62,6 +71,8 @@ class Fly {
         flyRect = flyRect.shift(toTarget);
         setTargetLocation();
       }
+
+      callout.update(time);
     }
   }
 
@@ -72,6 +83,11 @@ class Fly {
 
       if (gameLoop.activeView == View.playing) {
         gameLoop.score += 1;
+
+        if (gameLoop.score > (gameLoop.storage.getInt('highscore') ?? 0)) {
+          gameLoop.storage.setInt('highscore', gameLoop.score);
+          gameLoop.highscoreDisplay.updateHighscore();
+        }
       }
     }
 
