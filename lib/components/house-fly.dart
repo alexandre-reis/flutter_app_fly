@@ -7,7 +7,7 @@ import 'package:flutterappfly/game_loop.dart';
 class HouseFly extends Fly {
 
   HouseFly(GameLoop gameLoop, double x, double y) : super(gameLoop) {
-    flyRect = Rect.fromLTWH(x, y, gameLoop.tileSize * 1.5, gameLoop.tileSize * 1.5);
+    flyRect = Rect.fromLTWH(x, y, gameLoop.tileSize, gameLoop.tileSize);
     flyingSprite = List<Sprite>();
     flyingSprite.add(Sprite("flies/house-fly-1.png"));
     flyingSprite.add(Sprite("flies/house-fly-2.png"));

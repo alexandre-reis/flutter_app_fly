@@ -29,24 +29,27 @@ class Fly {
   }
 
   void setTargetLocation() {
-    double x = gameLoop.rnd.nextDouble() *
-        (gameLoop.screenSize.width - (gameLoop.tileSize * 2.0));
-    double y = gameLoop.rnd.nextDouble() *
-        (gameLoop.screenSize.height - (gameLoop.tileSize * 2.0));
+    double x = gameLoop.rnd.nextDouble() * (gameLoop.screenSize.width - (gameLoop.tileSize * 1.35));
+    double y = (gameLoop.rnd.nextDouble() * (gameLoop.screenSize.height - (gameLoop.tileSize * 2.85))) + (gameLoop.tileSize * 1.5);
+
     targetLocation = Offset(x, y);
   }
 
   void render(Canvas canvas) {
+//    canvas.drawRect(
+//        flyRect.inflate(flyRect.width / 2), Paint()..color = Color(0x77ffffff));
+
     if (isDead) {
-      deadSprite.renderRect(canvas, flyRect.inflate(2));
+      deadSprite.renderRect(canvas, flyRect.inflate(flyRect.width / 2));
     } else {
       flyingSprite[flyingSpriteIndex.toInt()]
-          .renderRect(canvas, flyRect.inflate(2));
-
+          .renderRect(canvas, flyRect.inflate(flyRect.width / 2));
       if (gameLoop.activeView == View.playing) {
         callout.render(canvas);
       }
     }
+
+//    canvas.drawRect(flyRect, Paint()..color = Color(0x88000000));
   }
 
   void update(double time) {
@@ -78,13 +81,14 @@ class Fly {
   }
 
   void onTapDown() {
-
     if (!isDead) {
-      Flame.audio.play('sfx/ouch${(gameLoop.rnd.nextInt(11) + 1).toString()}.ogg');
+      Flame.audio
+          .play('sfx/ouch${(gameLoop.rnd.nextInt(11) + 1).toString()}.ogg');
       isDead = true;
 
       if (gameLoop.soundButton.isEnabled) {
-        Flame.audio.play('sfx/ouch' + (gameLoop.rnd.nextInt(11) + 1).toString() + '.ogg');
+        Flame.audio.play(
+            'sfx/ouch' + (gameLoop.rnd.nextInt(11) + 1).toString() + '.ogg');
       }
 
       if (gameLoop.activeView == View.playing) {
@@ -96,7 +100,5 @@ class Fly {
         }
       }
     }
-
   }
-
 }
