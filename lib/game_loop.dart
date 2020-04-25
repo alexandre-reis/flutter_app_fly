@@ -23,6 +23,7 @@ import 'package:flutterappfly/view/home-view.dart';
 import 'package:flutterappfly/view/lost-view.dart';
 import 'package:flutterappfly/view/view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class GameLoop extends Game {
   View activeView = View.home;
@@ -49,6 +50,10 @@ class GameLoop extends Game {
   int score;
 
   HighscoreDisplay highscoreDisplay;
+  AudioPlayer homeBGM;
+  AudioPlayer playingBGM;
+
+//  AudioPlayer
 
   final SharedPreferences storage;
 
@@ -78,6 +83,25 @@ class GameLoop extends Game {
     highscoreDisplay = HighscoreDisplay(this);
 
     score = 0;
+    homeBGM = await Flame.audio.loopLongAudio('bgm/home.mp3', volume: .25);
+    homeBGM.pause();
+    playingBGM = await Flame.audio.loopLongAudio('bgm/playing.mp3', volume: .25);
+    playingBGM.pause();
+
+    playHomeBGM();
+
+  }
+
+  void playHomeBGM() {
+    playingBGM.pause();
+    playingBGM.seek(Duration.zero);
+    homeBGM.resume();
+  }
+
+  void playPlayingBGM() {
+    homeBGM.pause();
+    homeBGM.seek(Duration.zero);
+    playingBGM.resume();
   }
 
   void spawnFly() {
@@ -112,8 +136,6 @@ class GameLoop extends Game {
       fly.render(canvas);
     });
 
-
-
     if (activeView == View.home) homeView.render(canvas);
     if (activeView == View.lost) lostView.render(canvas);
     if (activeView == View.home || activeView == View.lost) {
@@ -147,7 +169,6 @@ class GameLoop extends Game {
     if (startButton.rect.contains(details.globalPosition)) {
       if (activeView == View.home || activeView == View.lost) {
         startButton.onTapDown();
-        score = 0;
         return;
       }
     }
@@ -183,7 +204,9 @@ class GameLoop extends Game {
     });
 
     if (activeView == View.playing && !didHitFly) {
+      Flame.audio.play('sfx/haha${(rnd.nextInt(5) + 1).toString()}.ogg');
       activeView = View.lost;
+      playHomeBGM();
     }
   }
 }
