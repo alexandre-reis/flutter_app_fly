@@ -14,7 +14,9 @@ import 'package:flutterappfly/components/highscore-display.dart';
 import 'package:flutterappfly/components/house-fly.dart';
 import 'package:flutterappfly/components/hungry-fly.dart';
 import 'package:flutterappfly/components/macho-fly.dart';
+import 'package:flutterappfly/components/music-button.dart';
 import 'package:flutterappfly/components/score-display.dart';
+import 'package:flutterappfly/components/sound-button.dart';
 import 'package:flutterappfly/components/start-button.dart';
 import 'package:flutterappfly/controllers/spawner.dart';
 import 'package:flutterappfly/view/credits-view.dart';
@@ -44,6 +46,8 @@ class GameLoop extends Game {
   StartButton startButton;
   HelpButton helpButton;
   CreditsButton creditsButton;
+  MusicButton musicButton;
+  SoundButton soundButton;
 
   FlySpawner spawner;
 
@@ -78,6 +82,8 @@ class GameLoop extends Game {
     startButton = StartButton(this);
     helpButton = HelpButton(this);
     creditsButton = CreditsButton(this);
+    soundButton = SoundButton(this);
+    musicButton = MusicButton(this);
 
     scoreDisplay = ScoreDisplay(this);
     highscoreDisplay = HighscoreDisplay(this);
@@ -136,6 +142,8 @@ class GameLoop extends Game {
       fly.render(canvas);
     });
 
+
+
     if (activeView == View.home) homeView.render(canvas);
     if (activeView == View.lost) lostView.render(canvas);
     if (activeView == View.home || activeView == View.lost) {
@@ -145,6 +153,9 @@ class GameLoop extends Game {
     }
     if (activeView == View.help) helpView.render(canvas);
     if (activeView == View.credits) creditsView.render(canvas);
+
+    musicButton.render(canvas);
+    soundButton.render(canvas);
 
     highscoreDisplay.render(canvas);
   }
@@ -192,6 +203,14 @@ class GameLoop extends Game {
         creditsButton.onTapDown();
         return;
       }
+    }
+
+    if (musicButton.rect.contains(details.globalPosition)) {
+      musicButton.onTapDown();
+    }
+
+    if (soundButton.rect.contains(details.globalPosition)) {
+      soundButton.onTapDown();
     }
 
     bool didHitFly = false;
