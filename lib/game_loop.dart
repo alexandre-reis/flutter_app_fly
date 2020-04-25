@@ -205,14 +205,6 @@ class GameLoop extends Game {
       }
     }
 
-    if (musicButton.rect.contains(details.globalPosition)) {
-      musicButton.onTapDown();
-    }
-
-    if (soundButton.rect.contains(details.globalPosition)) {
-      soundButton.onTapDown();
-    }
-
     bool didHitFly = false;
     List<Fly>.from(flies).forEach((fly) {
       if (fly.flyRect.contains(details.globalPosition) && !fly.isDead) {
@@ -221,6 +213,20 @@ class GameLoop extends Game {
         return;
       }
     });
+
+    if (musicButton.rect.contains(details.globalPosition)) {
+      musicButton.onTapDown();
+      return;
+    }
+
+    if (soundButton.rect.contains(details.globalPosition)) {
+      soundButton.onTapDown();
+      return;
+    }
+
+    if (soundButton.isEnabled) {
+      Flame.audio.play('sfx/haha' + (rnd.nextInt(5) + 1).toString() + '.ogg');
+    }
 
     if (activeView == View.playing && !didHitFly) {
       Flame.audio.play('sfx/haha${(rnd.nextInt(5) + 1).toString()}.ogg');

@@ -83,6 +83,10 @@ class Fly {
       Flame.audio.play('sfx/ouch${(gameLoop.rnd.nextInt(11) + 1).toString()}.ogg');
       isDead = true;
 
+      if (gameLoop.soundButton.isEnabled) {
+        Flame.audio.play('sfx/ouch' + (gameLoop.rnd.nextInt(11) + 1).toString() + '.ogg');
+      }
+
       if (gameLoop.activeView == View.playing) {
         gameLoop.score += 1;
 
