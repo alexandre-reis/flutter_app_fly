@@ -5,6 +5,7 @@ import 'package:flutterappfly/components/fly.dart';
 import 'package:flutterappfly/game_loop.dart';
 
 class DroolerFly extends Fly {
+  int tapsToKill = 1;
   DroolerFly(GameLoop gameLoop, double x, double y) : super(gameLoop) {
     flyRect = Rect.fromLTWH(x, y, gameLoop.tileSize, gameLoop.tileSize);
     flyingSprite = List<Sprite>();

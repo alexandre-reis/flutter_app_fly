@@ -5,6 +5,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutterappfly/components/callout.dart';
 import 'package:flutterappfly/game_loop.dart';
 import 'package:flutterappfly/view/view.dart';
+import 'dart:developer' as developer;
 
 class Fly {
   Rect flyRect;
@@ -17,6 +18,8 @@ class Fly {
   double flyingSpriteIndex = 0;
 
   double get speed => gameLoop.tileSize * 3;
+  int get pointValue => 1;
+  int tapsToKill = 3;
 
   Offset targetLocation;
 
@@ -31,6 +34,8 @@ class Fly {
   void setTargetLocation() {
     double x = gameLoop.rnd.nextDouble() * (gameLoop.screenSize.width - (gameLoop.tileSize * 1.35));
     double y = (gameLoop.rnd.nextDouble() * (gameLoop.screenSize.height - (gameLoop.tileSize * 2.85))) + (gameLoop.tileSize * 1.5);
+
+
 
     targetLocation = Offset(x, y);
   }
@@ -81,24 +86,30 @@ class Fly {
   }
 
   void onTapDown() {
-    if (!isDead) {
-      Flame.audio
-          .play('sfx/ouch${(gameLoop.rnd.nextInt(11) + 1).toString()}.ogg');
-      isDead = true;
+    tapsToKill = tapsToKill - 1;
+    if(tapsToKill == 0){
+      developer.log('matou');
+      isDead= true;
+      if (!isDead) {
+        Flame.audio
+            .play('sfx/ouch${(gameLoop.rnd.nextInt(11) + 1).toString()}.ogg');
+        isDead = true;
 
-      if (gameLoop.soundButton.isEnabled) {
-        Flame.audio.play(
-            'sfx/ouch' + (gameLoop.rnd.nextInt(11) + 1).toString() + '.ogg');
-      }
+        if (gameLoop.soundButton.isEnabled) {
+          Flame.audio.play(
+              'sfx/ouch' + (gameLoop.rnd.nextInt(11) + 1).toString() + '.ogg');
+        }
 
-      if (gameLoop.activeView == View.playing) {
-        gameLoop.score += 1;
+        if (gameLoop.activeView == View.playing) {
+          gameLoop.score += pointValue;
 
-        if (gameLoop.score > (gameLoop.storage.getInt('highscore') ?? 0)) {
-          gameLoop.storage.setInt('highscore', gameLoop.score);
-          gameLoop.highscoreDisplay.updateHighscore();
+          if (gameLoop.score > (gameLoop.storage.getInt('highscore') ?? 0)) {
+            gameLoop.storage.setInt('highscore', gameLoop.score);
+            gameLoop.highscoreDisplay.updateHighscore();
+          }
         }
       }
     }
+
   }
 }

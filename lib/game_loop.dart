@@ -57,6 +57,8 @@ class GameLoop extends Game {
   AudioPlayer homeBGM;
   AudioPlayer playingBGM;
 
+  int taps;
+
 //  AudioPlayer
 
   final SharedPreferences storage;
@@ -89,6 +91,7 @@ class GameLoop extends Game {
     highscoreDisplay = HighscoreDisplay(this);
 
     score = 0;
+
     homeBGM = await Flame.audio.loopLongAudio('bgm/home.mp3', volume: .25);
     homeBGM.pause();
     playingBGM = await Flame.audio.loopLongAudio('bgm/playing.mp3', volume: .25);

@@ -7,6 +7,9 @@ import 'package:flutterappfly/game_loop.dart';
 class MachoFly extends Fly {
 
   double get speed => gameLoop.tileSize * 1.5;
+  int get pointValue => 2;
+  int tapsToKill = 8;
+
 
   MachoFly(GameLoop gameLoop, double x, double y) : super(gameLoop) {
     flyRect = Rect.fromLTWH(x, y, gameLoop.tileSize * 1.35, gameLoop.tileSize * 1.35);
