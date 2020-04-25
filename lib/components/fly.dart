@@ -67,5 +67,7 @@ class Fly {
   void onTapDown() {
     isDead = true;
     gameLoop.spawnFly();
+
   }
+
 }
