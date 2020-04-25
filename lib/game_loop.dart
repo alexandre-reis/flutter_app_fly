@@ -13,6 +13,7 @@ import 'package:flutterappfly/components/help-button.dart';
 import 'package:flutterappfly/components/house-fly.dart';
 import 'package:flutterappfly/components/hungry-fly.dart';
 import 'package:flutterappfly/components/macho-fly.dart';
+import 'package:flutterappfly/components/score-display.dart';
 import 'package:flutterappfly/components/start-button.dart';
 import 'package:flutterappfly/controllers/spawner.dart';
 import 'package:flutterappfly/view/credits-view.dart';
@@ -34,6 +35,8 @@ class GameLoop extends Game {
   LostView lostView;
   CreditsView creditsView;
   HelpView helpView;
+
+  ScoreDisplay scoreDisplay;
 
   StartButton startButton;
   HelpButton helpButton;
@@ -65,6 +68,8 @@ class GameLoop extends Game {
     helpButton = HelpButton(this);
     creditsButton = CreditsButton(this);
 
+    scoreDisplay = ScoreDisplay(this);
+
     score = 0;
   }
 
@@ -94,6 +99,8 @@ class GameLoop extends Game {
   void render(Canvas canvas) {
     backyard.render(canvas);
 
+    if (activeView == View.playing) scoreDisplay.render(canvas);
+
     flies.forEach((fly) {
       fly.render(canvas);
     });
@@ -116,6 +123,8 @@ class GameLoop extends Game {
       fly.update(t);
     });
     flies.removeWhere((f) => f.isOffScreen);
+
+    if (activeView == View.playing) scoreDisplay.update(t);
   }
 
   void resize(Size size) {
@@ -127,6 +136,7 @@ class GameLoop extends Game {
     if (startButton.rect.contains(details.globalPosition)) {
       if (activeView == View.home || activeView == View.lost) {
         startButton.onTapDown();
+        score = 0;
         return;
       }
     }
